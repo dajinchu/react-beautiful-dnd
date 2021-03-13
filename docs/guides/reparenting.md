@@ -40,7 +40,7 @@ function List(props) {
     >
       {provided => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
-          {items.map(item) => (
+          {items.map((item) => (
             <Draggable draggableId={item.id} index={item.index}>
               {(provided, snapshot) => (
                 <div
@@ -52,7 +52,7 @@ function List(props) {
                 </div>
               )}
             </Draggable>
-          )}
+          ))}
         </div>
       )}
     </Droppable>
@@ -94,7 +94,7 @@ function List(props) {
 }
 ```
 
-### `<Droppable /> | \renderClone`
+### `<Droppable /> | renderClone`
 
 This function is called to get a clone to be rendered while dragging.
 
@@ -130,6 +130,6 @@ If you are doing drag and drop reordering within a `<table>` we have created a p
 
 ## Performance ⚠️
 
-Keep in mind that anything that is reparented will be rendered from scratch. So you do not want to be moving large component trees into a `portal`: otherwise you will experience large UI jank. We do not using reparenting out of the box because of this performance drawback.
+Keep in mind that anything that is reparented will be rendered from scratch. So you do not want to be moving large component trees into a `portal`: otherwise you will experience large UI jank. We do not recommend using reparenting out of the box because of this performance drawback.
 
 [← Back to documentation](/README.md#documentation-)

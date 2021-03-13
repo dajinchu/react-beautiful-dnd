@@ -42,7 +42,7 @@ import {
 } from '../../state/action-creators';
 import isMovementAllowed from '../../state/is-movement-allowed';
 import useAnnouncer from '../use-announcer';
-import useLiftInstruction from '../use-lift-instruction';
+import useHiddenTextElement from '../use-hidden-text-element';
 import AppContext, { type AppContextValue } from '../context/app-context';
 import useStartupValidation from './use-startup-validation';
 import usePrevious from '../use-previous-ref';
@@ -65,6 +65,7 @@ export type Props = {|
   liftInstruction: string,
 
   autoScroll?: boolean,
+  dragHandleUsageInstructions: string,
 |};
 
 const createResponders = (props: Props): Responders => ({
@@ -92,6 +93,7 @@ export default function App(props: Props) {
     nonce,
     liftInstruction,
     autoScroll,
+    dragHandleUsageInstructions,
   } = props;
   const lazyStoreRef: LazyStoreRef = useRef<?Store>(null);
 
@@ -106,13 +108,13 @@ export default function App(props: Props) {
 
   const announce: Announce = useAnnouncer(contextId);
 
-  const liftInstructionId: ElementId = useLiftInstruction(
+  const dragHandleUsageInstructionsId: ElementId = useHiddenTextElement({
     contextId,
-    liftInstruction,
-  );
+    text: dragHandleUsageInstructions,
+  });
   const styleMarshal: StyleMarshal = useStyleMarshal(contextId, nonce);
 
-  const lazyDispatch: Action => void = useCallback((action: Action): void => {
+  const lazyDispatch: (Action) => void = useCallback((action: Action): void => {
     getStore(lazyStoreRef).dispatch(action);
   }, []);
 
@@ -229,16 +231,16 @@ export default function App(props: Props) {
       contextId,
       canLift: getCanLift,
       isMovementAllowed: getIsMovementAllowed,
-      liftInstructionId,
+      dragHandleUsageInstructionsId,
       registry,
     }),
     [
       contextId,
       dimensionMarshal,
+      dragHandleUsageInstructionsId,
       focusMarshal,
       getCanLift,
       getIsMovementAllowed,
-      liftInstructionId,
       registry,
     ],
   );

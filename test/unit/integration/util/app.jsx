@@ -13,6 +13,7 @@ import {
   type DropResult,
 } from '../../../../src';
 import reorder from '../../../util/reorder';
+import { noop } from '../../../../src/empty';
 
 export type Item = {|
   id: string,
@@ -71,8 +72,6 @@ type Props = {|
   sensors?: Sensor[],
   enableDefaultSensors?: boolean,
 |};
-
-function noop() {}
 
 function getItems() {
   return Array.from({ length: 3 }, (v, k): Item => ({
@@ -134,50 +133,52 @@ export default function App(props: Props) {
   })();
 
   return (
-    <DragDropContext
-      onBeforeCapture={onBeforeCapture}
-      onBeforeDragStart={onBeforeDragStart}
-      onDragStart={onDragStart}
-      onDragUpdate={onDragUpdate}
-      onDragEnd={onDragEnd}
-      sensors={sensors}
-      enableDefaultSensors={props.enableDefaultSensors}
-    >
-      <Droppable
-        droppableId="droppable"
-        direction={direction}
-        isCombineEnabled={isCombineEnabled}
-        renderClone={renderClone}
-        getContainerForClone={props.getContainerForClone}
+    <main>
+      <DragDropContext
+        onBeforeCapture={onBeforeCapture}
+        onBeforeDragStart={onBeforeDragStart}
+        onDragStart={onDragStart}
+        onDragUpdate={onDragUpdate}
+        onDragEnd={onDragEnd}
+        sensors={sensors}
+        enableDefaultSensors={props.enableDefaultSensors}
       >
-        {(droppableProvided: DroppableProvided) => (
-          <div
-            {...droppableProvided.droppableProps}
-            ref={droppableProvided.innerRef}
-          >
-            {items.map((item: Item, index: number) => (
-              <Draggable
-                key={item.id}
-                draggableId={item.id}
-                index={index}
-                isDragDisabled={item.isEnabled === false}
-                disableInteractiveElementBlocking={withDefaultBool(
-                  item.canDragInteractiveElements,
-                  false,
-                )}
-                shouldRespectForcePress={withDefaultBool(
-                  item.shouldRespectForcePress,
-                  false,
-                )}
-              >
-                {render(item)}
-              </Draggable>
-            ))}
-            {droppableProvided.placeholder}
-          </div>
-        )}
-      </Droppable>
-      {props.anotherChild || null}
-    </DragDropContext>
+        <Droppable
+          droppableId="droppable"
+          direction={direction}
+          isCombineEnabled={isCombineEnabled}
+          renderClone={renderClone}
+          getContainerForClone={props.getContainerForClone}
+        >
+          {(droppableProvided: DroppableProvided) => (
+            <div
+              {...droppableProvided.droppableProps}
+              ref={droppableProvided.innerRef}
+            >
+              {items.map((item: Item, index: number) => (
+                <Draggable
+                  key={item.id}
+                  draggableId={item.id}
+                  index={index}
+                  isDragDisabled={item.isEnabled === false}
+                  disableInteractiveElementBlocking={withDefaultBool(
+                    item.canDragInteractiveElements,
+                    false,
+                  )}
+                  shouldRespectForcePress={withDefaultBool(
+                    item.shouldRespectForcePress,
+                    false,
+                  )}
+                >
+                  {render(item)}
+                </Draggable>
+              ))}
+              {droppableProvided.placeholder}
+            </div>
+          )}
+        </Droppable>
+        {props.anotherChild || null}
+      </DragDropContext>
+    </main>
   );
 }

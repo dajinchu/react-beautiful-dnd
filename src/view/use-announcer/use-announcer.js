@@ -26,12 +26,10 @@ export default function useAnnouncer(contextId: ContextId): Announce {
 
       // will force itself to be read
       el.setAttribute('aria-live', 'assertive');
-      el.setAttribute('role', 'log');
       // must read the whole thing every time
       el.setAttribute('aria-atomic', 'true');
 
       // hide the element visually
-      // eslint-disable-next-line es5/no-es6-static-methods
       Object.assign(el.style, visuallyHidden);
 
       // Add to body
@@ -43,9 +41,11 @@ export default function useAnnouncer(contextId: ContextId): Announce {
         // unmounting after a timeout to let any announcements
         // during a mount be published
         setTimeout(function remove() {
-          // not clearing the ref as it might have been set by a new effect
-          getBodyElement().removeChild(el);
-
+          // checking if element exists as the body might have been changed by things like 'turbolinks'
+          const body: HTMLBodyElement = getBodyElement();
+          if (body.contains(el)) {
+            body.removeChild(el);
+          }
           // if el was the current ref - clear it so that
           // we can get a warning if announce is called
           if (el === ref.current) {

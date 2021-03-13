@@ -20,6 +20,7 @@ type Props = {|
   multiSelectTo: (taskId: Id) => void,
 |};
 
+// $ExpectError - not sure why
 const Container = styled.div`
   width: 300px;
   margin: ${grid}px;
@@ -42,7 +43,8 @@ const TaskList = styled.div`
   min-height: 200px;
   flex-grow: 1;
   transition: background-color 0.2s ease;
-  ${props => (props.isDraggingOver ? `background-color: ${colors.N200}` : '')};
+  ${(props) =>
+    props.isDraggingOver ? `background-color: ${colors.N200}` : ''};
 `;
 
 type TaskIdMap = {
