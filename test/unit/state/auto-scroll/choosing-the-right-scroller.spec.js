@@ -13,10 +13,11 @@ import { origin } from '../../../../src/state/position';
 
 const state = getStatePreset();
 
-const getMocks = (): Args => ({
+const getMocks = (enabled = true): Args => ({
   scrollDroppable: jest.fn(),
   scrollWindow: jest.fn(),
   move: jest.fn(),
+  enabled,
 });
 
 const windowScrollSize = {
@@ -94,4 +95,31 @@ it('should use the jump scroller when in SNAP mode and there is a jumpScrollerRe
   scroller.scroll(withRequest);
   requestAnimationFrame.step();
   expect(mocks.scrollWindow).toHaveBeenCalled();
+});
+
+it('should not scroll with fluid scroller if scrolling is disabled', () => {
+  const mocks: Args = getMocks(false);
+  const scroller: AutoScroller = getScroller(mocks);
+
+  scroller.start(onCenter('FLUID'));
+
+  scroller.scroll(onEnd('FLUID'));
+  requestAnimationFrame.step();
+  expect(mocks.scrollWindow).not.toHaveBeenCalled();
+});
+
+it('should not scroll in SNAP mode if scrolling is disabled', () => {
+  const mocks: Args = getMocks(false);
+  const scroller: AutoScroller = getScroller(mocks);
+
+  scroller.start(onCenter('SNAP'));
+
+  const request: Position = { x: 1, y: 1 };
+  const withRequest: DraggingState = state.scrollJumpRequest(
+    request,
+    scrollableViewport,
+  );
+  scroller.scroll(withRequest);
+  requestAnimationFrame.step();
+  expect(mocks.scrollWindow).not.toHaveBeenCalled();
 });

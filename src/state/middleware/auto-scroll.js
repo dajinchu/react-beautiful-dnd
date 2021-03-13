@@ -12,6 +12,9 @@ const shouldStop = (action: Action): boolean =>
 export default (autoScroller: AutoScroller) => (store: MiddlewareStore) => (
   next: Dispatch,
 ) => (action: Action): any => {
+  if (!autoScroller) {
+    return;
+  }
   if (shouldStop(action)) {
     autoScroller.stop();
     next(action);
