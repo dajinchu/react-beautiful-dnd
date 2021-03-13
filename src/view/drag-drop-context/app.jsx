@@ -62,6 +62,9 @@ export type Props = {|
   enableDefaultSensors?: ?boolean,
 
   // screen reader
+  liftInstruction: string,
+
+  autoScroll?: boolean,
   dragHandleUsageInstructions: string,
 |};
 
@@ -88,6 +91,8 @@ export default function App(props: Props) {
     setCallbacks,
     sensors,
     nonce,
+    liftInstruction,
+    autoScroll,
     dragHandleUsageInstructions,
   } = props;
   const lazyStoreRef: LazyStoreRef = useRef<?Store>(null);
@@ -147,8 +152,9 @@ export default function App(props: Props) {
           // $FlowFixMe - not sure why this is wrong
           lazyDispatch,
         ),
+        enabled: autoScroll !== false,
       }),
-    [dimensionMarshal.scrollDroppable, lazyDispatch],
+    [autoScroll, dimensionMarshal.scrollDroppable, lazyDispatch],
   );
 
   const focusMarshal: FocusMarshal = useFocusMarshal(contextId);
