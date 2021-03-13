@@ -1,13 +1,12 @@
 // @flow
 /* eslint-disable es5/no-es6-methods */
+/* eslint-disable es5/no-es6-static-methods */
 /* eslint-disable no-restricted-globals */
 
 type Map<T> = {
   [key: string]: T,
 };
 
-// Number.isInteger is not forbidden yet
-// https://github.com/nkt/eslint-plugin-es5/pull/37
 export function isInteger(value: mixed): boolean {
   if (Number.isInteger) {
     return Number.isInteger(value);
@@ -25,7 +24,7 @@ export function values<T>(map: Map<T>): T[] {
     return Object.values(map);
   }
 
-  return Object.keys(map).map(key => map[key]);
+  return Object.keys(map).map((key) => map[key]);
 }
 
 // Could also extend to pass index and list

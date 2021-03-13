@@ -6,6 +6,7 @@ import { grid } from '../constants';
 import type { DraggableProvided, DraggableStateSnapshot } from '../../../src';
 import type { Author } from '../types';
 
+// $ExpectError - not sure why
 const Avatar = styled.img`
   width: 60px;
   height: 60px;
@@ -42,7 +43,7 @@ export default class AuthorItem extends Component<Props> {
 
     return (
       <Avatar
-        ref={ref => provided.innerRef(ref)}
+        ref={(ref) => provided.innerRef(ref)}
         {...provided.draggableProps}
         {...provided.dragHandleProps}
         src={author.avatarUrl}

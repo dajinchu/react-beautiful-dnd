@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 import { DragDropContext, Droppable, Draggable } from '../src';
 
 // fake data generator
-const getItems = count =>
-  Array.from({ length: count }, (v, k) => k).map(k => ({
+const getItems = (count) =>
+  Array.from({ length: count }, (v, k) => k).map((k) => ({
     id: `item-${k}`,
     content: `item ${k}`,
   }));
@@ -33,11 +33,17 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener('securitypolicyviolation', e => {
-      this.setState(state => {
-        return { cspErrors: [...state.cspErrors, e] };
-      });
-    });
+    document.addEventListener(
+      'securitypolicyviolation',
+      this.onSecurityPolicyViolation,
+    );
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener(
+      'securitypolicyviolation',
+      this.onSecurityPolicyViolation,
+    );
   }
 
   onDragEnd(result) {
@@ -57,6 +63,12 @@ export default class App extends Component {
     });
   }
 
+  onSecurityPolicyViolation = (e) => {
+    this.setState((state) => {
+      return { cspErrors: [...state.cspErrors, e] };
+    });
+  };
+
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
   render() {
@@ -67,11 +79,11 @@ export default class App extends Component {
           <b id="cspErrors">{this.state.cspErrors.length}</b>
         </h1>
         <Droppable droppableId="droppable">
-          {droppableProvided => (
+          {(droppableProvided) => (
             <div ref={droppableProvided.innerRef}>
               {this.state.items.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {draggableProvided => (
+                  {(draggableProvided) => (
                     <div
                       ref={draggableProvided.innerRef}
                       {...draggableProvided.draggableProps}
